@@ -2,9 +2,19 @@ import { Module } from '@nestjs/common';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { UserModule } from './app/user/user.module';
+import { AuthModule } from './app/auth/auth.module';
+import {ConfigModule} from "@nestjs/config";
+import {MongooseModule} from "@nestjs/mongoose";
+import {getMongoConfig} from "./app/configs/mongo.config";
 
 @Module({
-  imports: [],
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true , envFilePath: 'envs/.account.env'}),
+    MongooseModule.forRootAsync(getMongoConfig()),
+    UserModule,
+    AuthModule
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
