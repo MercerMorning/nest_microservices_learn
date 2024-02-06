@@ -4,6 +4,7 @@ import {UserRepository} from "../user/repositories/user.repository";
 import {UserEntity} from "../user/entities/user.entity";
 import {UserRole} from "@purple/interfaces";
 import {JwtService} from "@nestjs/jwt";
+import {AccountRegister} from "../../../../../../contracts/src/lib/account/account.register";
 
 @Injectable()
 export class AuthService {
@@ -12,7 +13,7 @@ export class AuthService {
     private readonly jwtService: JwtService
     ) {
   }
-  async register({ email, password, displayName }: RegisterDto) {
+  async register({ email, password, displayName }: AccountRegister.Request) {
     const oldUser = await this.userRepository.findUser(email);
     if (oldUser) {
       throw new Error("This user already exists")

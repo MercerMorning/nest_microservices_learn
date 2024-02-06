@@ -1,7 +1,18 @@
-import {Document} from "mongoose";
-import {IUser, UserRole} from "@purple/interfaces";
-import {Prop, SchemaFactory} from "@nestjs/mongoose";
+import {Document, Types} from "mongoose";
+import {IUser, IUserCourses, PurchaseState, UserRole} from "@purple/interfaces";
+import {Prop, SchemaFactory, Schema} from "@nestjs/mongoose";
 
+@Schema()
+export class UserCourses extends Document implements IUserCourses {
+  @Prop({ required: true })
+  courseId: string;
+  @Prop({ required: true, enum: PurchaseState, type: String })
+  purchaseState: PurchaseState;
+}
+
+export const UserCourseSchema = SchemaFactory.createForClass(UserCourses);
+
+@Schema()
 export class User extends Document implements IUser {
   @Prop()
   displayName: string;
@@ -11,6 +22,8 @@ export class User extends Document implements IUser {
   passwordHash: string;
   @Prop({ required: true, enum: UserRole, type: String, default: UserRole.Student })
   role: UserRole
+  @Prop({ type: [UserCourseSchema], _id: false})
+  courses: Types.Array<UserCourses>
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
